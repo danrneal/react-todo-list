@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        #app {
+            margin: auto;
+            text-align: center;
+            width: 300px;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+    <title>Todo</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script type="text/babel">
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    tasks: [],
+                    input: "",
+                };
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h1>Tasks</h1>
+                        <ul>
+                            {this.state.tasks.map((task, i) => (
+                                <li key={i} className="left">
+                                    <button data-index={i} onClick={this.deleteTask}>&#10003;</button> {task}
+                                </li>
+                            ))}
+                        </ul>
+                        <div>
+                            <h3>Number of tasks: {this.state.tasks.length}</h3>
+                            <input
+                                onKeyPress={this.inputKeyPress}
+                                onChange={this.handleChange}
+                                value={this.state.input}
+                            />
+                            <button onClick={this.addTask}>Add Task</button>
+                        </div>
+                    </div >
+                );
+            }
+
+            handleChange = (event) => {
+                this.setState({
+                    input: event.target.value,
+                });
+            };
+
+            inputKeyPress = (event) => {
+                if (event.key === "Enter") {
+                    this.addTask();
+                }
+            };
+
+            addTask = () => {
+                this.setState((state) => ({
+                    tasks: [...state.tasks, state.input],
+                    input: "",
+                }));
+            };
+
+            deleteTask = (event) => {
+                const index = event.target.dataset.index;
+                this.setState((state) => {
+                    const tasks = [...state.tasks];
+                    tasks.splice(index, 1);
+                    return {
+                        tasks: tasks
+                    }
+                });
+            };
+        }
+
+        ReactDOM.render(<App />, document.querySelector("#app"));
+
+    </script>
+</body>
+
+</html>
